@@ -2,8 +2,14 @@ const express = require('express')
 const res = require('express/lib/response')
 const app = express()
 
-app.get('/', (req,res)=>{
-    res.send('Clonned GitHub repo to VM to access project!')
+//Middleware
+const postsRoute = require('./routes/posts')
+app.use('/posts', postsRoute)
+
+app.get('/', (req, res) => {
+    res.send('HOMEPAGE')
 })
 
-app.listen(3000)
+app.listen(3000, ()=> {
+    console.log('Server is up and running...') //callback
+})
