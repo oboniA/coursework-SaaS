@@ -1,7 +1,9 @@
 // import mongoose
 const mongoose = require('mongoose')
 
-// create USER schema
+// Create USER schema
+// Required fields: username, email, password, date joined
+// min/max denotes characters
 const userSchema = mongoose.Schema({
     username:{
         type:String,
@@ -21,11 +23,12 @@ const userSchema = mongoose.Schema({
         min:6,
         max:1024
     },
-    date:{
+    date_joined:{
         type:Date,
         default:Date.now
     }
 })
+
 
 //export schema to database collection
 module.exports = mongoose.model('users', userSchema)
