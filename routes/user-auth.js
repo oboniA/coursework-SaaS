@@ -5,26 +5,19 @@ const router = express.Router()
 // import user Post
 const User = require('../models/User')
 
-//import user-registration-validation
-//const {signupValidation, signinValidation} = require('../validations/validation')
-
-// import passsword encryption package
-//const bcryptjs = require('bcryptjs')
-
-// import JWT package
-//const jsonwebtoken = require('jsonwebtoken')
+// import user-registration-validation
+const {signupValidation, signinValidation} = require('../user-validations/validation')
 
 
-// Registration Validations
+// user registration endpoint
 router.post('/sign-up', async(req, res)=> {
     console.log(req.body)
 })
 
-// Sign-in Validations
+// user Sign-in endpoint
 router.post('/sign-in', async(req, res)=>{
-
+    console.log(req.body)
 })
-
 
 //export to router
 module.exports = router
