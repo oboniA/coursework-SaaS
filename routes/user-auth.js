@@ -53,7 +53,22 @@ router.post('/sign-up', async(req, res)=> {
 
 // USER SIGN-IN END-POINT
 router.post('/sign-in', async(req, res)=>{
-    console.log(req.body)
+    // validation check for user-input
+    const {error} = signinValidation(req.body) 
+    // if error in user input
+    if(error){
+        return res.status(400).send({message: error.details[0].message}) 
+    }
+
+    // validation check if user exists
+    const user = await User.findOne({email:req.body.email}) 
+    // if non-existant user
+    if(!user){
+        return res.status(400).send({message: 'Account Does Not Exist. Try With A Different Account.'})
+    }
+
+
+
 })
 
 //export to router
