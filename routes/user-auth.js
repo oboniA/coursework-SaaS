@@ -17,14 +17,14 @@ router.post('/sign-up', async(req, res)=> {
 
     // validation check for user-input
     const {error} = signupValidation(req.body) 
-    // if error in user input
+    // error in user input
     if(error){
         return res.status(400).send({message: error.details[0].message}) 
     }
 
     // validation check for existing user
     const userExists = await User.findOne({email:req.body.email}) 
-    // if user exists
+    // existing user
     if(userExists){
         return res.status(400).send({message: 'User Aready Exists'})
     }
@@ -42,7 +42,6 @@ router.post('/sign-up', async(req, res)=> {
         email:req.body.email,
         password: hashPass
     })
-
     try{
         const savedUser = await user.save()
         res.send(savedUser)
@@ -51,21 +50,36 @@ router.post('/sign-up', async(req, res)=> {
     }
 })
 
+
 // USER SIGN-IN END-POINT
 router.post('/sign-in', async(req, res)=>{
+
     // validation check for user-input
     const {error} = signinValidation(req.body) 
-    // if error in user input
+    // error in user input
     if(error){
         return res.status(400).send({message: error.details[0].message}) 
     }
 
-    // validation check if user exists
+    // validation check for existing user-account 
     const user = await User.findOne({email:req.body.email}) 
-    // if non-existant user
+    // non-existant user-account
     if(!user){
         return res.status(400).send({message: 'Account Does Not Exist. Try With A Different Account.'})
     }
+    
+    // IF account exists
+    // decrypt password to compare
+    const passwordValidation = await bcryptjs.compare(req.body.password, user.password)
+    // wrong password
+    if(!passwordValidation){
+        return res.status(400).send({message: 'Password Is Incorrect'})
+    }
+    // password correct
+    res.send('Sign-in SUCCESSFULL!!')
+
+
+
 
 
 
