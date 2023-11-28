@@ -8,8 +8,11 @@ const User = require('../models/User')
 // import user registration and signin validations
 const {signupValidation, signinValidation} = require('../user-validations/validation')
 
-// import passsword encryption package
+// import passsword encryption/decryption library
 const bcryptjs = require('bcryptjs')
+
+// import JWT library
+const jsonwebtoken = require('jsonwebtoken')
 
 
 // USER REGISTRATION END-POINT
@@ -75,13 +78,13 @@ router.post('/sign-in', async(req, res)=>{
     if(!passwordValidation){
         return res.status(400).send({message: 'Password Is Incorrect'})
     }
-    // password correct
-    res.send('Sign-in SUCCESSFULL!!')
-
-
-
-
-
+    
+    // when correct password,
+    // will generate access token key 
+    // signed unique token for every user id
+    const accessTokenKey = jsonwebtoken.sign({_id:user._id}, process.env.SECRET_ACCESS_TOKEN)  // token in .env
+    // token sent in response body and header
+    res.header('access-token',accessTokenKey).send({'access-token':accessTokenKey})
 
 })
 
