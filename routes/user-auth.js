@@ -1,4 +1,4 @@
-// import libraries 
+ // import libraries 
 const express = require('express') 
 const router = express.Router() 
 
@@ -32,13 +32,10 @@ router.post('/sign-up', async(req, res)=> {
         return res.status(400).send({message: 'User Aready Exists'})
     }
 
-    // to add additional layer of security
-    // to encrypt password
+    // encrypt password
     const salt = await bcryptjs.genSalt(5)  // hash password with random no.
     const hashPass = await bcryptjs.hash(req.body.password,salt)
 
-
-    // else
     // insert & save data to Database
     const user = new User({
         username:req.body.username,
@@ -71,21 +68,19 @@ router.post('/sign-in', async(req, res)=>{
         return res.status(400).send({message: 'Account Does Not Exist. Try With A Different Account.'})
     }
     
-    // IF account exists
     // decrypt password to compare
     const passwordValidation = await bcryptjs.compare(req.body.password, user.password)
     // wrong password
     if(!passwordValidation){
         return res.status(400).send({message: 'Password Is Incorrect'})
     }
-    
+
     // when correct password,
     // will generate access token key 
     // signed unique token for every user id
     const accessTokenKey = jsonwebtoken.sign({_id:user._id}, process.env.SECRET_ACCESS_TOKEN)  // token in .env
     // token sent in response body and header
-    res.header('access-token',accessTokenKey).send({'access-token':accessTokenKey})
-
+    res.header('access-token', accessTokenKey).send({'access-token': accessTokenKey})
 })
 
 //export to router
