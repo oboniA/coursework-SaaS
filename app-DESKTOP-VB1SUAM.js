@@ -18,21 +18,23 @@ const userauthRoute = require('./routes/user-auth')
 const homeRoute = require('./routes/home')
 const postCreateRoute = require('./routes/postRoute')
 const postBrowse = require('./routes/browseRoute')
-const postInteraction = require('./routes/interactions')
+const postLike = require('./routes/likeRoute')
+const postDislike = require('./routes/dislikeRoute')
+const postComment = require('./routes/commentsRoute')
 const maxinteraction = require('./routes/highestRoute')
-
+const editPosts = require('./routes/editpostRoute')
 
 // API End-Points for all routes
 app.use('/api/user', userauthRoute)
 app.use('/api/home', homeRoute)
 app.use('/api/home/post', postCreateRoute)
 app.use('/api/home/allposts', postBrowse)
-app.use('/api/home/allposts', postInteraction)  
+app.use('/api/home/allposts', postLike)  // /api/posts/:postId/likepost
+app.use('/api/home/allposts', postDislike)  // /api/posts/:postId/dislikepost
+app.use('/api/home/allposts', postComment)  // /api/posts/:postId/comment
 app.use('/api/home/allposts', maxinteraction)
+app.use('/api/home/allposts', editPosts)
 
-app.get('/', (req, res) => {
-  res.send('WELCOME TO PIAZZA!')
-})
 
 // connects to mongoDB cluster
 mongoose.connect(process.env.DB_CONNECTOR,  { //database location in .env

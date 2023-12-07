@@ -69,5 +69,90 @@ router.get('/:postId', verifyToken, async(req,res)=> {
 })
 
 
+// Edit a Specific post
+router.patch('/:postId', verifyToken, async (req, res) => {
+    try {
+        const userid = req.user._id  // extract sign-in user ID
+        // when unauthorized access
+        if (!userid) {
+            return res.status(401).send({message: 'Unauthorized'})
+        }
+
+        const authUser = await User.findById(userid) // extract user detail from user ID
+        // when user does not exist
+        if (!authUser) {
+            return res.status(404).send({message: 'User not found'})
+        } 
+
+        const postValid = await Post.findById(req.params.postId)  //check if post exists in DB
+        // non-existant post
+        if (!postValid) {
+            return res.status(400).send({ message: "Post not found" })
+        }
+        
+        //IF EXPIRED
+        if (postValid.status === 'Expired') {
+            return res.status(400).send({ message: "Action can not be executed: post is already Expired." })
+        }
+
+        if (authUser.username !== postValid.postOwnerName) {
+            return res.status(400).send({ message: "Action can not be executed: This post do not belong to you!" })
+        }        
+        else {
+            try {
+                postValid.postOwnerName = authUser.postOwnerName
+                postValid.postTitle = req.body.postTitle;
+                postValid.messageBody = req.body.messageBody;
+
+                const postUpdate = await postValid.save();
+                res.send(postUpdate); // Callback
+
+            } catch (err) {
+                res.status(500).send({ message: 'Error Updating', error: err })
+            }
+        }
+    } catch (err) {
+        return res.status(500).send({ message: 'Error', error: err.message }) // Send more specific error details
+    }
+})
+
+
+// DELETE a Specific post
+router.delete('/:postId', verifyToken, async (req, res) => {
+
+    const userid = req.user._id 
+    if (!userid) {
+        return res.status(401).send({message: 'Unauthorized'})
+    }
+
+    const authUser = await User.findById(userid)
+    if (!authUser) {
+        return res.status(404).send({message: 'User not found'})
+    } 
+
+    const postValid = await Post.findById(req.params.postId)  //check if post exists in DB
+    // non-existant post
+    if (!postValid) {
+        return res.status(400).send({ message: "Post not found" })
+    }
+
+    if (authUser.username !== postValid.postOwnerName) {
+        return res.status(400).send({ message: "Action can not be executed: This post do not belong to you!" })
+    } else {
+        try {
+            // findOneAndDelete() mongoose function
+            const postDelete = await Post.findOneAndDelete({
+                _id: req.params.postId  // deletes post by ID
+            }) 
+            res.send({ message:"Post Deleted!", data: postDelete})
+        } catch (err) {
+            res.status(500).send({ message:"Deletion Unsuccessful!", error: err })
+        }
+    } 
+        
+})
+
+
+
 //export to router
 module.exports = router

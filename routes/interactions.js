@@ -159,6 +159,5 @@ router.post('/:postId/comment', verifyToken, async (req, res) => {
 })
 
 
-
 //export to router
 module.exports = router
