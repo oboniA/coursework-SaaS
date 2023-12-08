@@ -111,7 +111,7 @@ router.patch('/:postId', verifyToken, async (req, res) => {
                 postValid.messageBody = req.body.messageBody;
 
                 const postUpdate = await postValid.save()
-                res.send(postUpdate) /
+                res.send(postUpdate) 
 
             } catch (err) {
                 res.status(500).send({ message: 'Error Updating', error: err })
