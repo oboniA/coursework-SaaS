@@ -4,7 +4,8 @@ const router = express.Router()
 const User = require('../models/User') // User Model
 const verifyToken = require('../verifyAccessToken') // for authentication
 
-// callback
+
+// callback after Access
 router.get('/', verifyToken, (req, res) => {
     try{ 
         res.send('Access Token Accepted'

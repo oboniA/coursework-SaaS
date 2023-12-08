@@ -6,7 +6,10 @@ const { post } = require('../routes/user-auth')
 const commentSchema = mongoose.Schema( {
     commenter: String,
     comment: String,
-    commentDate: { type: Date, default: Date.now()}
+    commentDate: { 
+        type: Date, 
+        default: Date.now()
+    }
 })
  
 // Post Schema
@@ -41,7 +44,7 @@ const postSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        default: 'Live' //NEW
+        default: 'Live' 
     },
      // likes count
      likes: {

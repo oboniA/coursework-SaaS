@@ -22,6 +22,7 @@ router.post('/', verifyToken, async(req, res)=>{
         return res.status(404).send({message: 'User not found'})
     }
     
+
     const postTime = new Date()
     const postDuration = req.body.postDuration
     const expirationTime = new Date(postTime.getTime() + postDuration*60000)

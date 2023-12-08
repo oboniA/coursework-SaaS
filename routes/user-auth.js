@@ -75,9 +75,10 @@ router.post('/sign-in', async(req, res)=>{
         return res.status(400).send({message: 'Password Is Incorrect'})
     }
 
-    // when correct password,
-    // will generate access token key 
-    // signed unique token for every user id
+    /* when correct password,
+       will generate access token key 
+       signed unique token for every user id  
+    */
     const accessTokenKey = jsonwebtoken.sign({_id:user._id}, process.env.SECRET_ACCESS_TOKEN)  // token in .env
     // token sent in response body and header
     res.header('access-token', accessTokenKey).send({'access-token': accessTokenKey})

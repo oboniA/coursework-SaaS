@@ -33,12 +33,18 @@ router.get('/:postId', verifyToken, async(req,res)=> {
         // EXPLAIN THIS IS NEW BIT
         const timeNow = new Date() // current time
 
+        /*checks if expiration time exists in the post
+        and if current time is greater that expired time
+        if both true, then post is expired */
         if(getPostById.postExpirationTime && timeNow > getPostById.postExpirationTime) 
             {
                 getPostById.status = 'Expired'
                 await getPostById.save()  // saves in database
             }
         
+        /*checks if expiration time exists in the post
+        and if current time is less that expired time
+        if both true, then post is still active */
         if(getPostById.postExpirationTime && timeNow < getPostById.postExpirationTime) 
             {
                 getPostById.status = 'Live'
@@ -104,8 +110,8 @@ router.patch('/:postId', verifyToken, async (req, res) => {
                 postValid.postTitle = req.body.postTitle;
                 postValid.messageBody = req.body.messageBody;
 
-                const postUpdate = await postValid.save();
-                res.send(postUpdate); // Callback
+                const postUpdate = await postValid.save()
+                res.send(postUpdate) /
 
             } catch (err) {
                 res.status(500).send({ message: 'Error Updating', error: err })
@@ -151,7 +157,6 @@ router.delete('/:postId', verifyToken, async (req, res) => {
     } 
         
 })
-
 
 
 //export to router

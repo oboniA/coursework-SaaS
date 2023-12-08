@@ -30,6 +30,7 @@ app.use('/api/home/allposts', postBrowse)
 app.use('/api/home/allposts', postInteraction)  
 app.use('/api/home/allposts', maxinteraction)
 
+// GET CALLBACK
 app.get('/', (req, res) => {
   res.send('WELCOME TO PIAZZA!')
 })
