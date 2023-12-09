@@ -10,6 +10,8 @@ router.get('/', verifyToken, (req, res) => {
     try{ 
         res.send('Access Token Accepted'
                 +'\n'+
+                'Authorization Completed'
+                +'\n'+
                 'Welcome to Piazza.')
     }catch(err){
         res.status(400).send({message:err})

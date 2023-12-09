@@ -51,3 +51,5 @@ mongoose.connect(process.env.DB_CONNECTOR,  { //database location in .env
 app.listen(3000, ()=> {
     console.log('Server is up and running...') //callback
 })
+
+

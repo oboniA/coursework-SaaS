@@ -25,5 +25,5 @@ const signinValidation = (data) => {
 }
 
 
-// export validation
-module.exports = {signupValidation, signinValidation}
+//export validation
+module.exports = {signupValidation, signinValidation} 

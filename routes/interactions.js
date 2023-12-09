@@ -51,7 +51,13 @@ router.post('/:postId/like', verifyToken, async (req, res) => {
 
         // save like in database
         await postValid.save()
-        return res.status(200).send(postValid)
+
+        const givePost = {
+            loggedInUser: authUser.username,
+            likedPost: postValid
+            
+        }
+        return res.status(200).send(givePost)
 
     } catch(err) {
         console.error('Error in likepost route:', err); // Log the error for debugging purposes
@@ -101,12 +107,18 @@ router.post('/:postId/dislike', verifyToken, async (req, res) => {
             postValid.likes -= 1
         }
         // then add dislike
-        postValid.dislikedBy.push(userid)
+        postValid.dislikedBy.push(userid+authUser.us)
         postValid.dislikes += 1
 
         // save like in database
         await postValid.save()
-        return res.status(200).send(postValid)
+
+        const givePost = {
+            loggedInUser: authUser.username,
+            dislikedPost: postValid
+            
+        }
+        return res.status(200).send(givePost)
 
     } catch(err) {
         console.error('Error in dislikepost route:', err) // Log the error for debugging purposes

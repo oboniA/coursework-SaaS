@@ -8,7 +8,7 @@ npm install body-parser
 https://github.com/0anower/coursework-SaaS.git
 
 
-*Token
+*Github Token
 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
 
 

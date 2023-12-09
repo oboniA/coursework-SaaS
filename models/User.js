@@ -31,4 +31,8 @@ const userSchema = mongoose.Schema({
 
 
 //export schema to database collection
-module.exports = mongoose.model('users', userSchema)
+module.exports = mongoose.model('users', userSchema) 
+
+
+
+

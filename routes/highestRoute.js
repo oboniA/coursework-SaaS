@@ -55,5 +55,4 @@ router.get("/maxint/:postTopic/:status", verifyToken, async (req, res) => {
 
 
 //export to router
-module.exports = router
-
+module.exports = router 

@@ -4,17 +4,36 @@ const router = express.Router()
 const Post = require('../models/Post') // Post Model
 const User = require('../models/User') // User Model
 const verifyToken = require('../verifyAccessToken') // for authentication
-const { get } = require('express/lib/response')
+const { get } = require('express/lib/response') 
 
 
 // Browse all posts
 // filter posts by topic
 router.get('/', verifyToken, async (req, res) => {
     try {
+        const userId = req.user._id  // extract sign-in user ID
+        // when unauthorized access
+        if (!userId) {
+            return res.status(401).send({message: 'Unauthorized'})
+        }
+        
+        const authUser = await User.findById(userId) // extract user detail from user ID
+        // when user does not exist
+        if (!authUser) {
+            return res.status(404).send({message: 'User not found'})
+        }
+        
         const getPosts = await Post.find(req.query).sort({ postRegestrationTime: -1})  // latest post first
         console.log(req.query)  // filters according to query
 
-        return res.status(200).send({message: 'NEWS FEED', data: getPosts })  // reads all posts
+        const browse_data = {
+            loggedInUser: authUser.username,
+            totalPosts: getPosts.length,
+            posts: getPosts
+            
+        }
+
+        return res.status(200).send(browse_data)  // reads all posts
 
     } catch (err) {
         return res.status(500).send({ message: 'Error fetching posts', error: err })
@@ -24,6 +43,18 @@ router.get('/', verifyToken, async (req, res) => {
 // READ a specific post
 router.get('/:postId', verifyToken, async(req,res)=> {
     try{
+        const userId = req.user._id  // extract sign-in user ID
+        // when unauthorized access
+        if (!userId) {
+            return res.status(401).send({message: 'Unauthorized'})
+        }
+
+        const authUser = await User.findById(userId) // extract user detail from user ID
+        // when user does not exist
+        if (!authUser) {
+            return res.status(404).send({message: 'User not found'})
+        }
+
         const getPostById = await Post.findById(req.params.postId)  // fetches post by its ID
         // post does not exist
         if (!getPostById) {
@@ -35,7 +66,7 @@ router.get('/:postId', verifyToken, async(req,res)=> {
 
         /*checks if expiration time exists in the post
         and if current time is greater that expired time
-        if both true, then post is expired */
+        if both true, then post is expired */ 
         if(getPostById.postExpirationTime && timeNow > getPostById.postExpirationTime) 
             {
                 getPostById.status = 'Expired'
@@ -68,7 +99,13 @@ router.get('/:postId', verifyToken, async(req,res)=> {
 
             // add time left for post expiration
         }
-        res.send(postInfo) // displays post with info
+
+        const givePost = {
+            loggedInUser: authUser.username,
+            currentPost: postInfo
+            
+        }
+        res.send(givePost) // displays post with info
     }catch(err){
         res.send({message:err})
     }
@@ -101,14 +138,21 @@ router.patch('/:postId', verifyToken, async (req, res) => {
             return res.status(400).send({ message: "Action can not be executed: post is already Expired." })
         }
 
-        if (authUser.username !== postValid.postOwnerName) {
+        if (authUser.username != postValid.postOwnerName) {
             return res.status(400).send({ message: "Action can not be executed: This post do not belong to you!" })
         }        
         else {
+            //This will update the expiration time if duration changed
+            const postTime = postValid.postRegestrationTime
+            const editpostDuration = req.body.postDuration
+            const newexpirationTime = new Date(postTime.getTime() + editpostDuration*60000)
+
             try {
-                postValid.postOwnerName = authUser.postOwnerName
-                postValid.postTitle = req.body.postTitle;
-                postValid.messageBody = req.body.messageBody;
+                postValid.postOwnerName = authUser.username
+                postValid.postTitle = req.body.postTitle
+                postValid.messageBody = req.body.messageBody
+                postValid.postDuration = editpostDuration
+                postValid.postExpirationTime = newexpirationTime
 
                 const postUpdate = await postValid.save()
                 res.send(postUpdate) 
@@ -160,4 +204,4 @@ router.delete('/:postId', verifyToken, async (req, res) => {
 
 
 //export to router
-module.exports = router
+module.exports = router 
