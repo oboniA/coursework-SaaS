@@ -30,10 +30,7 @@ app.use('/api/home/allposts', postBrowse)
 app.use('/api/home/allposts', postInteraction)  
 app.use('/api/home/allposts', maxinteraction)
 
-// GET CALLBACK
-app.get('/', (req, res) => {
-  res.send('WELCOME TO PIAZZA!')
-})
+
 
 // connects to mongoDB cluster
 mongoose.connect(process.env.DB_CONNECTOR,  { //database location in .env
@@ -45,6 +42,11 @@ mongoose.connect(process.env.DB_CONNECTOR,  { //database location in .env
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error)
   })
+
+  // GET CALLBACK
+app.get('/', (req, res) => {
+  res.send('WELCOME TO PIAZZA!')
+})
   
   
 // server port
