@@ -8,11 +8,11 @@ interactions, including liking, disliking, or adding a comment.
 Node.js Express package and MongoDB used to develop the software.
 
 Coursework phases:
-Phase A: Install and deploy software in virtualised environments.
-Phase B: Enforcing authentication/verification functionalities.
-Phase C: Development of Piazza RESTful APIs.
-Phase D: Testing.
-Phase E: Deploy Piazza project into a VM using Docker
-Phase F: Deploy application in Kubernetes
-Phase G: Report solution in a technical report
+1) Phase A: Install and deploy software in virtualised environments.
+2) Phase B: Enforcing authentication/verification functionalities.
+3) Phase C: Development of Piazza RESTful APIs.
+4) Phase D: Testing.
+5) Phase E: Deploy Piazza project into a VM using Docker
+6) Phase F: Deploy application in Kubernetes
+7) Phase G: Report solution in a technical report
 
